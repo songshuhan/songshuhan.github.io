@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://example.com/2022/05/24/word2vec/image-20220525015241713.png">
 <meta property="og:image" content="http://example.com/2022/05/24/word2vec/image-20220525015246285.png">
 <meta property="article:published_time" content="2022-05-24T10:14:07.000Z">
-<meta property="article:modified_time" content="2022-05-25T02:43:27.656Z">
+<meta property="article:modified_time" content="2022-05-25T02:48:50.088Z">
 <meta property="article:author" content="Shuhan Song">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -100,6 +100,8 @@
     <br/>
     <span id="actions">
       <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/05/25/ReliableDGL/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="Next post" href="/2022/05/23/DCRNN/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -204,26 +206,28 @@
 [\omega_1,\omega_2,\cdots,\omega_{t-1},\omega_t,\omega_{t+1},\cdots,\omega_T]</script><p>Target: 词的分布式表示</p>
 <hr>
 <p><strong><font color="DeepPink">接下来的分析过程是基于$skip-gram$,会提到三个假设：</font></strong></p>
-<p>首先我们来看联合概率分布，联合概率表示为包含多个条件并且所有的条件都同时成立的概率，记作 $P(X=a,Y=b)$或 $P(a,b)$，有的书上也习惯记作$P(ab)$。根据公式$P(X,Y)=P(X|Y)\times P(Y)$,我们从词库中随便选择一个词，那么整个词库的概率表示应该如下所示，<strong><font color="DarkViolet">因为后面的计算会很复杂，这里为了方便计算，$\triangle$表示假设窗口大小是2C</font></strong></p>
+<p>首先我们来看联合概率分布，联合概率表示为包含多个条件并且所有的条件都同时成立的概率，记作 $P(X=a,Y=b)$或 $P(a,b)$，有的书上也习惯记作$P(ab)$,<strong><font color="DeepPink">利用深度学习拟合的就是这种概率分布。</font></strong>根据公式$P(X,Y)=P(X|Y)\times P(Y)$,我们从词库中随便选择一个词，那么整个词库的概率表示应该如下所示，<strong><font color="DarkViolet">因为后面的计算会很复杂，这里为了方便计算，$\triangle$表示假设窗口大小是2C</font></strong></p>
 <script type="math/tex; mode=display">
 P(\omega_{1:T})= P(\omega_t) \cdot P(context(\omega_t)|\omega_t)\triangleq P(\omega_t) \cdot P(\omega_{t-c:t-1},\omega_{t+1:t+c}|\omega_t)</script><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">补充：“似然性”和“概率”（或然性）有明确的区分：概率，用于在已知一些参数的情况下，预测接下来在观测上所得到的结果；似然性，则是用于在已知某些观测所得到的结果时，对有关事物之性质的参数进行估值，也就是说已观察到某事件后，对相关母数进行猜测。</span><br></pre></td></tr></table></figure>
 <p><strong>似然函数（</strong>英语：$likelihood function$）是一种关于<a target="_blank" rel="noopener" href="https://zh.m.wikipedia.org/wiki/统计模型">统计模型</a>中的<a target="_blank" rel="noopener" href="https://zh.m.wikipedia.org/wiki/母數">参数</a>的<a target="_blank" rel="noopener" href="https://zh.m.wikipedia.org/wiki/函数">函数</a>，表示模型参数中的<strong>似然性</strong></p>
 <p>所以我们从上式可以写出$likelihood$：</p>
 <script type="math/tex; mode=display">
-P(\omega_t) \cdot P(\omega_{t-c:t-1},\omega_{t+1:t+c}|\omega_t)</script><p>又因为我们不太关注$P(\omega_t)$,因为是随机取的，而且有$T$个，所以我们更关注后面的条件概率</p>
-<p>所以$conditional likelihood$可以表示为:</p>
+P(\omega_t) \cdot P(\omega_{t-c:t-1},\omega_{t+1:t+c}|\omega_t)</script><p>又因为我们不太关注$P(\omega_t)$,因为是随机取的，而且可以取遍整个词表，有$T$个，所以我们更关注后面的条件概率</p>
+<p>所以$conditional \ likelihood$可以表示为:</p>
 <script type="math/tex; mode=display">
-\prod_{t=1}^{T}P(\omega_{t-c:t-1},\omega_{t+1:t+c}|\omega_t)</script><p> <strong><font color="DarkViolet">这里主要假设每个条件概率之间是相互独立的</font></strong></p>
-<p>为了化简成更简单的形式，采用$\log$，则$average conditional likelihood$可以如下图表示：</p>
+\prod_{t=1}^{T}P(\omega_{t-c:t-1},\omega_{t+1:t+c}|\omega_t)</script><p> <strong><font color="DarkViolet">这里假设每个条件概率之间是相互独立的</font></strong></p>
+<p>为了化简，采用$\log$，则$average \ conditional \ likelihood$可以如下图表示：</p>
 <script type="math/tex; mode=display">
-\frac{1}{T} \sum_{t=1}^{T}\log P(\omega_{t-c:t-1},\omega_{t+1:t+c}|\omega_t)</script><p><strong><font color="DarkViolet">这里我们做第三个假设，假设内部$P(\omega_{t+i}|\omega_t)$是独立同分布的</font></strong></p>
+\frac{1}{T} \sum_{t=1}^{T}\log P(\omega_{t-c:t-1},\omega_{t+1:t+c}|\omega_t)</script><p><strong><font color="DarkViolet">这里做第三个假设，假设内部$P(\omega_{t+i}|\omega_t)$是独立同分布的</font></strong></p>
 <p>于是继续化简上式为</p>
 <script type="math/tex; mode=display">
-\frac{1}{T} \sum_{t=1}^{T}\log \prod_{i \in[-c,0) \cup (0,c]  }P(\omega_{t+i}|\omega_t) =  \frac{1}{T} \sum_{t=1}^{T} \sum_{i \in[-c,0) \cup (0,c]  } \log P(\omega_{t+i}|\omega_t)</script><p>我们转换到现在可以看出主要关注给定一个中心词，该中心词窗口内的词的概率就可以，<strong><font color="DarkViolet">注意，这里窗口内的词都是独立的，不存在顺序问题(比如要先出现$\omega_{t}$再出现$\omega_{t+1}$)，这样的表示已经忽略了次序，这里都是独立的。</font></strong></p>
+\frac{1}{T} \sum_{t=1}^{T}\log \prod_{i \in[-c,0) \cup (0,c]  }P(\omega_{t+i}|\omega_t) =  \frac{1}{T} \sum_{t=1}^{T} \sum_{i \in[-c,0) \cup (0,c]  } \log P(\omega_{t+i}|\omega_t)</script><p>到现在可以看出只要关注给定一个中心词，该中心词窗口内其他词的概率就可以，<strong><font color="DarkViolet">注意，这里窗口内的词都是独立的，不存在顺序问题(比如要先出现$\omega_{t}$再出现$\omega_{t+1}$)，这样的表示已经忽略了次序，这里都是独立的。</font></strong></p>
 <hr>
 <p><strong><font color="LightCoral">当然，从上面的分析我们暂时看不出来和求词表分布式表示有啥关系？接下来我们探索这个问题</font></strong></p>
 <p>首先我们从输入输出和模型的角度来分析，先看下面这张图</p>
+<p><br></p>
 <p><img src="/2022/05/24/word2vec/image-20220524213551921.png" alt="image-20220524213551921"></p>
+<p><br></p>
 <p>首先我们选取一个中心词$\omega_i$，用$one-hot$的表示输入的话则是一个$\mathbb R^{|V| \times 1}$的向量，其中$|V|$是词表中所有单词的数量，这个向量只有在第$i$位是1，其他位全都为0。参数矩阵$W \in \mathbb R^{|V| \times d}$和$U \in \mathbb R^{d \times |V|} $，<strong><font color="DarkViolet">注意这里的$W$矩阵没有使用激活层，是线性的，为了计算简单，如果用矩阵相乘的方式，那么用$\mathbb R^{|V| \times 1}$的向量转置以后得到的$\mathbb R^{ 1 \times |V| }$向量作为输入，在模型的输出也会得到一个$\mathbb R^{ 1 \times |V| }$的向量</font></strong>，这里我们要特别理解模型的输出代表什么，如下所示：</p>
 <script type="math/tex; mode=display">
 \mathbb R^{ 1 \times |V| } \stackrel{每一位的表示}\longrightarrow \left\{ P(\omega_1|\omega_i),P(\omega_2|\omega_i),P(\omega_3|\omega_i),\cdots,P(\omega_{|V|}|\omega_i)\right\}</script><p>然后使用softmax将所有概率值放在$(0，1]$区间当中，即对于中心词$\omega_{i}$，所预测的其他所有词的概率，令$softmax$之后的值为，</p>
