@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="深度神经网络已被证明在视觉和音频识别任务中特别有效。因此，面向硬件的近似方法已成为一个热门话题。研究表明，定制的基于硬件的神经网络加速器在吞吐量和能效方面都可以超过其通用处理器。应用程序定制加速器与基于近似的网络训练方法共同设计时，可将大型、密集且计算昂贵的网络转换为小型、稀疏且硬件高效的替代方案，从而提高网络部署的可行性。在本文中，我们对高性能网络推理的近似方法进行了综合评估，并深入讨论了它们在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNN-Hardware">
+<meta property="og:url" content="http://example.com/2022/05/27/DNN-Hardware/index.html">
+<meta property="og:site_name" content="SHUHAN&#39;S NOTE">
+<meta property="og:description" content="深度神经网络已被证明在视觉和音频识别任务中特别有效。因此，面向硬件的近似方法已成为一个热门话题。研究表明，定制的基于硬件的神经网络加速器在吞吐量和能效方面都可以超过其通用处理器。应用程序定制加速器与基于近似的网络训练方法共同设计时，可将大型、密集且计算昂贵的网络转换为小型、稀疏且硬件高效的替代方案，从而提高网络部署的可行性。在本文中，我们对高性能网络推理的近似方法进行了综合评估，并深入讨论了它们在">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/05/27/DNN-Hardware/image-20220527135040680.png">
+<meta property="article:published_time" content="2022-05-27T03:02:58.000Z">
+<meta property="article:modified_time" content="2022-05-27T09:23:14.430Z">
+<meta property="article:author" content="Shuhan Song">
+<meta property="article:tag" content="Passion, Graph Neural Network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/05/27/DNN-Hardware/image-20220527135040680.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>DNN-Hardware</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/songshuhan">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/05/26/DARTS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/05/27/DNN-Hardware/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/05/27/DNN-Hardware/&text=DNN-Hardware"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/05/27/DNN-Hardware/&is_video=false&description=DNN-Hardware"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DNN-Hardware&body=Check out this article: http://example.com/2022/05/27/DNN-Hardware/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/05/27/DNN-Hardware/&name=DNN-Hardware&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/05/27/DNN-Hardware/&t=DNN-Hardware"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="toc-number">2.</span> <span class="toc-text">评估指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%9A%E5%88%B6%E7%A1%AC%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">为什么定制硬件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E8%BE%B9%E7%95%8C%E7%9A%84%E7%81%B5%E6%B4%BB%E6%80%A7"><span class="toc-number">3.1.</span> <span class="toc-text">计算边界的灵活性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%8E%8B%E7%BC%A9%E6%8F%90%E9%AB%98%E4%BA%86%E7%AE%97%E6%B3%95%E6%80%A7%E8%83%BD"><span class="toc-number">3.2.</span> <span class="toc-text">网络压缩提高了算法性能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">3.3.</span> <span class="toc-text">局限性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8F%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">量化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">定点表示法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%BC%80%E5%8F%91"><span class="toc-number">4.1.1.</span> <span class="toc-text">算法开发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.1.2.</span> <span class="toc-text">硬件实现</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        DNN-Hardware
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Shuhan Song</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-05-27T03:02:58.000Z" itemprop="datePublished">2022-05-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>深度神经网络已被证明在视觉和音频识别任务中特别有效。<strong><font color="DarkViolet">因此，面向硬件的近似方法已成为一个热门话题。研究表明，定制的基于硬件的神经网络加速器在吞吐量和能效方面都可以超过其通用处理器。</font></strong>应用程序定制加速器与基于近似的网络训练方法共同设计时，可将大型、密集且计算昂贵的网络转换为小型、稀疏且硬件高效的替代方案，从而提高网络部署的可行性。在本文中，我们对高性能网络推理的近似方法进行了综合评估，并深入讨论了它们在定制硬件实现中的有效性。</p>
+<hr>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>随着任务复杂性的增加，推理体系结构变得更加深入，计算成本也越来越高。最近的工作表明，通过使用近似，$DNN$部署变得更加可行，因为它减少了内存使用和计算复杂性。</p>
+<p>$DNN$近似算法可分为两大类：</p>
+<ol>
+<li>定量方法会降低权重、激活（神经元输出）或两者的精度</li>
+<li>权重修剪方法通过修剪和结构简化删除冗余参数</li>
+</ol>
+<p>我们在本文中评估这两种类型的方法，因为它们都有助于$DNN$加速。</p>
+<p>多年来，通用处理器$（GPP）$，尤其是多核$CPU$和$GPU$，一直是$DNN$推理的主要硬件平台。对于未压缩的$DNN$模型，层操作映射到密集的浮点矩阵乘法，$GPP$可以按照单指令、多数据$（SIMD）$或单指令、多线程$（SIMT）$并行处理范式高效地并行处理这些运算。然而，在$DNN$近似下，使用自定义硬件平台（如现场可编程门阵列$（FPGA）$和专用集成电路$（ASIC）$来加速推理的趋势正在出现。虽然$GPU$仍然擅长密集浮点计算，但研究人员报告称，通过使用低精度定点量化，定制硬件的吞吐量和能效更高。此外，$SIMD$和$SIMT$体系结构在处理稀疏数据时表现不佳，通过细粒度减重压缩的$DNN$在定制硬件中执行效率更高,逻辑和内存层次结构的可定制性使自定义硬件$DNN$推理更快，更节能。</p>
+<p>许多世界领先的信息技术公司已选择定制硬件实施其下一代$DNN$体系结构</p>
+<ol>
+<li>$Google’s \ Tensor \ Processing \ Unit (TPU) $</li>
+<li>$ Intel \ Nervana $</li>
+<li>$IBM \ TrueNorth$</li>
+<li>基于$FPGA$的设计如$Microsoft \ Brainwave$和$Xilinx \ Everest$</li>
+</ol>
+<p>一般来说，$ASIC$设计可以实现最先进的吞吐量和能效？然而，它们耗时且需要资源的设计和制造过程使其难以跟上$DNN$算法的快速发展。</p>
+<p>当然一些高级的实现工具，比如$OpenCL$，$Xilinx Vivado$高层分析工具等，使$FPGA$和$ASIC$的$DNN$硬件设计过程更快、更简单。</p>
+<p>本文贡献：</p>
+<ol>
+<li>通过比较不同规模的可比$FPGA、ASIC、CPU和GPU平台的roofline \ model$，激发了定制硬件的$DNN$近似。</li>
+<li>我们调查了最新$DNN$近似的主要趋势。我们详细介绍了低精度量化和权重修剪的方法，介绍了最近的算法发展，并评估了它们的相对优势和劣势。</li>
+<li>评估每种方法的定制硬件实现的性能，重点是准确性、压缩、吞吐量、延迟和能效。</li>
+<li>提出了未来研究的几个有希望的方向</li>
+</ol>
+<hr>
+<h2 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h2><ol>
+<li>准确率</li>
+<li>压缩率</li>
+<li>吞吐量</li>
+<li>延迟</li>
+<li>能量效率</li>
+</ol>
+<hr>
+<h2 id="为什么定制硬件"><a href="#为什么定制硬件" class="headerlink" title="为什么定制硬件"></a>为什么定制硬件</h2><p>对于$DNN$的推理，近似在三个方面有助于提高吞吐量：提高并行性、减少内存传输和减少工作量，借助$roofline \  modeling$，可以解释每个因素的贡献，揭示为什么自定义硬件可以从近似中挤出比$GPP$更多的加速。</p>
+<p>$roofline \  modeling$捕捉了加速平台的理论峰值性能，同时也反映了片外存储器数据传输的影响。对于任何高性能计算引擎，峰值算术性能（以$op/$秒表示）受到两个因素的限制：<strong><font color="DarkViolet">内存带宽和可用计算资源量</font></strong></p>
+<ol>
+<li>内存带宽限制了激活的读取和写的速率，以及可以获取片外存储的参数的值。</li>
+<li>计算资源，指的是能够执行运算（主要是乘法）的片上并行处理单元。</li>
+</ol>
+<p>当内存受限时，平台的算术性能不会随着并行度的增加而增加。同时，在计算范围内，所有可用的处理资源都已饱和。</p>
+<p><img src="/2022/05/27/DNN-Hardware/image-20220527135040680.png" alt="image-20220527135040680"></p>
+<p>横坐标表示$DNN$推理的算术强度，纵坐标表示算术表现。算术强度通常也称为操作强度或计算与通信$（CTC）$比率，表示为每字节片外内存流量$（op /B）$执行的算术运算数。<strong><font color="DarkViolet">算术强度在$break \  point$左侧的时候是内存限制，在右侧的时候则是计算限制</font></strong></p>
+<h3 id="计算边界的灵活性"><a href="#计算边界的灵活性" class="headerlink" title="计算边界的灵活性"></a>计算边界的灵活性</h3><p>可以观察到，由于其对浮点算术运算的专业支持，$GPU$可以为$FP32 DNN$推理提供最高的算术性能。然而，当从浮点数据转换为精度较低的定点数据表示时，自定义硬件设计的灵活性有助于在精度与性能之间进行权衡。</p>
+<h3 id="网络压缩提高了算法性能"><a href="#网络压缩提高了算法性能" class="headerlink" title="网络压缩提高了算法性能"></a>网络压缩提高了算法性能</h3><p>只有在执行应用程序不受其内存限制的情况下，才能达到平台的计算边界。如果是，那么，为了获得更高的运算性能，需要更高的运算强度。<strong><font color="DarkViolet">通过以精度降低的形式进行网络压缩，每次执行的操作需要访问的片外内存更少，因此，如果应用程序不受计算限制，则可以实现更高的运算强度和随后的性能。</font></strong>还可以通过减轻权重来压缩网络，这样既节省了内存，又无需执行相关操作，还可以提高运算强度，从而提高性能：较小的网络可以更有效地使用片内缓存，减少甚至完全消除片外内存流量。</p>
+<p>从$roofline \  modeling$可以分析，当受内存限制时，算术强度的增加意味着沿屋顶线向右移动，从而导致算术性能的提高。虽然所有的硬件平台都可以从网络压缩中受益，但自定义硬件实现，具有比$GPPs$更高的计算边界，将获得最大的收益;当计算强度增加时，$GPPs$会更早地到达计算边界。</p>
+<h3 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h3><p>虽然屋顶线模型可以预测由于通过近似获得的并行性增加和内存传输减少而导致的算术性能的提高（以$op/s$为单位），但它们只能在有限的范围内捕获吞吐量$(cl/s)$的相应变化。为了了解权重修剪方法对吞吐量的影响，我们必须考虑一个额外的因素。算术性能和吞吐量与工作负载$（op /cl）$相关：每个分类执行的算术运算数。</p>
+<p>权重修剪删除了不重要的参数，这些方法实现了同时的内存传输和工作量减少。由于内存传输的减少可以促进算术性能的提高，因此吞吐量的提高有可能超过通过使用实现的算术性能。</p>
+<p>定量的方法，另一方面，由于每种分类执行的操作数量保持不变，因此反定位方法不会减少工作量。对于这些，算术性能的提高会导致吞吐量的成比例增加。</p>
+<p>虽然$DNN$近似会导致信息丢失和随后的精度下降，但本文调查的大多数作品表明，在准确性方面做出适当的牺牲可以显著提高性能。本文的其余部分重点分析了网络压缩和准确性之间的权衡。</p>
+<p>延迟关键的$DNN$应用程序，如高级驾驶辅助系统，要求快速生成分类。许多用户界面应用程序也需要低延迟来维持足够的用户体验。$Roofline$模型本身并不捕获延迟。在此，我们详细介绍了定制硬件如何凭借其灵活性实现最先进的$DNN$推理延迟和吞吐量。</p>
+<p>自定义的基于硬件的$DNN$推断应用程序在较低的时钟频率下运行，因此功耗较低，与在$GPPs$上运行的系统相比，具有更高的吞吐量和/或更低的延迟。此外，一些实现通过利用可定制性，在内存能效方面优于基于$GPU$的版本。</p>
+<hr>
+<h2 id="量化"><a href="#量化" class="headerlink" title="量化"></a>量化</h2><p>第一个主要近似主题是定量。$FPGA$和$ASIC$的灵活性允许实现低精度$DNN$，从而通过并行化和减少对慢片外存储器的依赖来提高吞吐量。</p>
+<h3 id="定点表示法"><a href="#定点表示法" class="headerlink" title="定点表示法"></a>定点表示法</h3><h4 id="算法开发"><a href="#算法开发" class="headerlink" title="算法开发"></a>算法开发</h4><p>浮点量化的$DNN$通常允许对每个单独参数使用任意的二进制点位置，即指数值。然而，数据表示范围的灵活性是以牺牲高资源使用、电力消耗和算术运算延迟为代价的。定点量化$DNN$通常使用一致的，预定的精度和二进制点位置，即相等的最大和最小可表示的大小，对整个网络。允许在硬件中进行快速、廉价和节能的算术操作，但强制使用不变的数据表示范围。有些工作进行了证明：</p>
+<ol>
+<li>$Courbariaux$等人对这个主题进行了调查，表明即使在低精度的定点格式下进行前向传播，$CNN$推理的准确性仍然可以保持</li>
+<li>$Jacob$等人对流行的CNN模型$MobileNet$进行了8位量化，报告称在$ARM \  CPU$上的推断延迟减少了高达$50%$，而对$COCO$数据集的准确率仅下降了$1.8$。</li>
+<li>许多作者提出了基于$FPGA$的$CNN$和$RNN$推理框架，使用低精度定点格式，实现了优于浮点格式的吞吐量，精度下降可以忽略不计。<strong><font color="DarkViolet">然而，由于不同层的数据可能有非常不同的范围，因此对整个网络使用恒定的量化分辨率可能会提供次优带宽效率。</font></strong></li>
+</ol>
+<p>$Courbariaux$等人，$Qiu$等人和$Shin$等人探索了使用块浮点$(BFP)$进行权重和激活量化。变量组共享共同的二进制点位置，表示为根据数据分布在训练期间更新的比例因子。因此，它可以被视为完全浮点格式和定点格式之间的折衷。这些作者将每一层的参数与一个比例因子相关联，通过在训练时检查参数的溢出状态，在每次运算后更新。他们的实验表明，对于$CNNs$和$RNNs$, $BFP$对权重和激活量的量化会导致低于$1.0 pp$的精度损失。从那时起，$BFP$在$DNN$的硬件推断中也变得普遍。</p>
+<p>许多作者已经探索了允许自动选择分层精度的方法</p>
+<ol>
+<li>受$Sung$等人的启发，$Shin$等人通过分析信量化噪声比$(SQNR)$和精度之间的权衡，提出了在长短期记忆$(LSTMs)$中使用成本最优精度的彻底搜索。然而，这种搜索的时间复杂度太高，不切实际。</li>
+<li>邱等人制定了一个优化问题，以使关于精度和二进制点位置变化的量化误差最小化。提出了一种贪婪的方法来求解它，得到了令人满意的分层$CNN$量化。</li>
+<li>Lin等人制定并解决了一个基于$SQNR$的优化问题，以确定定制设计的CNN的每层最优定点精度，表明所提出的方案为$CIFAR-10$数据集提供了超过$1.2×$压缩，而不损失精度。</li>
+</ol>
+<p>他们的方法将$FP32$中预训练的网络转化为进一步量化的等效网络，而无需再训练。</p>
+<p>许多作者着重于通过修改舍入方案来减少精度损失。</p>
+<ol>
+<li>$Gupta$等人使用随机舍入的$16$位定点权重表示训练$CNNs$，实现$MNIST和cifar10$数据集的无损压缩。通过</li>
+<li>$Wu$等人提出了$WAGE$，一种利用随机舍入离散梯度的$CNN$框架。$AlexNet$使用2个比特用于权重，8个比特用于激活、梯度和错误，用$WAGE$对$ImageNet$进行分类的训练显示出大约8.8 pp的准确性下降。</li>
+<li>$Shin$等人探索了将量化分辨率作为$CNNs$和$RNNs$的可训练参数。通过可调的量化粒度，对$SVHN$数据集进行分类的4位$CNN$和执行语言建模的6位$RNN$的精度损失均小于0.1 pp。</li>
+</ol>
+<p>虽然前面提到的所有作品都采用定点格式量化权重，但$Lai$等人使用浮点权值和定点激活实现了$CNN$推断。$AlexNet$上的实验表明，使用7位浮点权值可以达到与$ImageNet$上的11位定点表示相同的精度。</p>
+<p>自适应量化法的作者在比前面提到的逐层方法更细的粒度上研究量化。在再训练过程中，网络会进行调整，每个过滤器都被允许假定一个独立的精度。对小规模数据集和模型的实验表明，自适应量化法与剪枝相结合，能够获得优于二值化神经网络的精度和压缩比，二值化神经网络的每个数据只使用一个比特来表示。$DoReFa-Net$是一个实现低精度量化的框架，支持从32位定点到二进制的任意精度的权重、激活和梯度。它的作者对各种数据精度组合进行了实证分析，得出结论，当权重和/或激活被量化到少于4位时，精度会迅速下降。</p>
+<h4 id="硬件实现"><a href="#硬件实现" class="headerlink" title="硬件实现"></a>硬件实现</h4><p>$Nurvitadhi$等人通过实验评估了使用浮点和定点数据表示的$Nvidia \ GPUs$和$Intel \ FPGAs$对$CNN$推理的性能。虽然他们评估的$Stratix-10 \ FPGA$的吞吐量落后于带有$FP32$的$Titan \ X \ GPU$，但$FPGA$在6位定点数据下可以实现超过其50%的吞吐量。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/songshuhan">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="toc-number">2.</span> <span class="toc-text">评估指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%9A%E5%88%B6%E7%A1%AC%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">为什么定制硬件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E8%BE%B9%E7%95%8C%E7%9A%84%E7%81%B5%E6%B4%BB%E6%80%A7"><span class="toc-number">3.1.</span> <span class="toc-text">计算边界的灵活性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%8E%8B%E7%BC%A9%E6%8F%90%E9%AB%98%E4%BA%86%E7%AE%97%E6%B3%95%E6%80%A7%E8%83%BD"><span class="toc-number">3.2.</span> <span class="toc-text">网络压缩提高了算法性能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">3.3.</span> <span class="toc-text">局限性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8F%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">量化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text">定点表示法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%BC%80%E5%8F%91"><span class="toc-number">4.1.1.</span> <span class="toc-text">算法开发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.1.2.</span> <span class="toc-text">硬件实现</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/05/27/DNN-Hardware/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/05/27/DNN-Hardware/&text=DNN-Hardware"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/05/27/DNN-Hardware/&is_video=false&description=DNN-Hardware"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DNN-Hardware&body=Check out this article: http://example.com/2022/05/27/DNN-Hardware/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/05/27/DNN-Hardware/&title=DNN-Hardware"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/05/27/DNN-Hardware/&name=DNN-Hardware&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/05/27/DNN-Hardware/&t=DNN-Hardware"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2022-Forever
+    Shuhan Song
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/songshuhan">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+</body>
+</html>
