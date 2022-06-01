@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://example.com/2022/05/26/DARTS/image-20220526230243667.png">
 <meta property="og:image" content="http://example.com/2022/05/26/DARTS/image-20220526231345786.png">
 <meta property="article:published_time" content="2022-05-26T09:55:04.000Z">
-<meta property="article:modified_time" content="2022-06-01T05:11:21.878Z">
+<meta property="article:modified_time" content="2022-06-01T10:45:06.670Z">
 <meta property="article:author" content="Shuhan Song">
 <meta property="article:tag" content="NAS">
 <meta name="twitter:card" content="summary">
@@ -201,7 +201,7 @@ x^{(j)}=\sum_{i<j}o^{i,j}(x^{(i)})</script><p>还包括一个特殊的零操作�
 <p><br></p>
 <p>这里我理解是假如在图(b)中要算节点0和节点1之间的$\bar o^{(i,j)}(x)$，假设有三个操作，$softmax$以后对应的比例为$\frac{1}{5}$,$\frac{2}{5}$,$\frac{2}{5}$则</p>
 <script type="math/tex; mode=display">
-\bar o^{(i,j)}(x) = \frac{1}{5}op1 + \frac{2}{5}op2 + \frac{2}{5}op3</script><p>在搜索结束时，通过替换每个混合操作$\bar o^{(i,j)}(x)$可以获得离散的体系结构,</p>
+\bar o^{(i,j)}(x) = \frac{1}{5}op1(x) + \frac{2}{5}op2(x) + \frac{2}{5}op3(x)</script><p>在搜索结束时，通过替换每个混合操作$\bar o^{(i,j)}(x)$可以获得离散的体系结构,</p>
 <script type="math/tex; mode=display">
 \bar o^{(i,j)}(x) =  argmax_{o \in O} \alpha_o^{(i,j)}</script><p>在下文中，我们将α称为结构的编码。</p>
 <p>在进行了$softmax$松弛之后，我们的目标是共同学习所有混合运算中的结构$\alpha$和权重$w$（例如卷积滤波器的权重）。与使用$RL$或$evolution$进行架构搜索类似，DARTS旨在优化验证损失，但使用梯度下降。</p>
