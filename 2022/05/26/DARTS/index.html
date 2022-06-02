@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://example.com/2022/05/26/DARTS/image-20220526230243667.png">
 <meta property="og:image" content="http://example.com/2022/05/26/DARTS/image-20220526231345786.png">
 <meta property="article:published_time" content="2022-05-26T09:55:04.000Z">
-<meta property="article:modified_time" content="2022-06-01T10:45:06.670Z">
+<meta property="article:modified_time" content="2022-06-02T10:22:13.241Z">
 <meta property="article:author" content="Shuhan Song">
 <meta property="article:tag" content="NAS">
 <meta name="twitter:card" content="summary">
@@ -213,24 +213,24 @@ x^{(j)}=\sum_{i<j}o^{i,j}(x^{(i)})</script><p>还包括一个特殊的零操作�
 s.t. \ w^*(\alpha)=argmin_w \ \mathcal L_{train}(w,\alpha)</script><h3 id="近似架构梯度"><a href="#近似架构梯度" class="headerlink" title="近似架构梯度"></a>近似架构梯度</h3><p>由于代价高昂的内部优化，准确评估架构梯度可能会让人望而却步。因此，我们提出一个简单的近似方案如下：</p>
 <script type="math/tex; mode=display">
 \nabla_{\alpha} \mathcal L_{val}(w^*(\alpha),\alpha) \\
-\approx \nabla_{\alpha} \mathcal L_{val}(w- \xi\nabla_{\alpha}\mathcal L_{train}(w,\alpha),\alpha)</script><p>其中$w$是当前的权重，$\xi$是内部优化的学习率，这个优化 $w^*(\alpha)$的想法是使用单步优化，而不是通过训练直到收敛来解决内部优化，如果 $w$已经是内部最优，则$\nabla_{\alpha}\mathcal L_{train}(w,\alpha)=0$</p>
+\approx \nabla_{\alpha} \mathcal L_{val}(w- \xi\nabla_{w}\mathcal L_{train}(w,\alpha),\alpha)</script><p>其中$w$是当前的权重，$\xi$是内部优化的学习率，这个优化 $w^*(\alpha)$的想法是使用单步优化，而不是通过训练直到收敛来解决内部优化，如果 $w$已经是内部最优，则$\nabla_{w}\mathcal L_{train}(w,\alpha)=0$</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">相关技术已用于模型转移的元学习（Finn等人，2017年）、基于梯度的超参数调整（Luketina等人，2016年）和展开的生成性对抗网络（Metz等人，2017年）</span><br></pre></td></tr></table></figure>
 <p><img src="/2022/05/26/DARTS/image-20220526222732827.png" alt="image-20220526222732827"></p>
 <p><br></p>
 <p><strong><font color="DarkViolet">接下来就是本文最大的贡献和亮点：</font></strong></p>
 <p>说了这么一大堆，其实就是为了引出下面2个公式。首先，作者是说使用$chain \ rule$(链式法则)可以将上面近似后的式子化简为：</p>
 <script type="math/tex; mode=display">
-\nabla_{\alpha} \mathcal L_{val}(w- \xi\nabla_{\alpha}\mathcal L_{train}(w,\alpha),\alpha) = \nabla_{\alpha} \mathcal L_{val}(w',\alpha)- \xi\nabla_{\alpha,w}^2\mathcal L_{train}(w,\alpha) \cdot \nabla_{w'}\mathcal L_{val}(w',\alpha)</script><p>看着复杂，其实就是一个关于 $\alpha$的复合函数求导，其实就是可以看作 $\nabla_{\alpha} f(g_1(\alpha),g_2(\alpha))$，其中 $f(\cdot,\cdot)=\mathcal L_{val}(\cdot,\cdot)$， $g_1(\alpha)=w- \xi\nabla_{\alpha}\mathcal L_{train}(w,\alpha)$，$g_2(\alpha)=\alpha$</p>
+\nabla_{\alpha} \mathcal L_{val}(w- \xi\nabla_{w}\mathcal L_{train}(w,\alpha),\alpha) = \nabla_{\alpha} \mathcal L_{val}(w',\alpha)- \xi\nabla_{\alpha,w}^2\mathcal L_{train}(w,\alpha) \cdot \nabla_{w'}\mathcal L_{val}(w',\alpha)</script><p>看着复杂，其实就是一个关于 $\alpha$的复合函数求导，其实就是可以看作 $\nabla_{\alpha} f(g_1(\alpha),g_2(\alpha))$，其中 $f(\cdot,\cdot)=\mathcal L_{val}(\cdot,\cdot)$， $g_1(\alpha)=w- \xi\nabla_{w}\mathcal L_{train}(w,\alpha)$，$g_2(\alpha)=\alpha$</p>
 <p><br></p>
 <p><img src="/2022/05/26/DARTS/image-20220526230243667.png" alt="image-20220526230243667"></p>
 <p><br></p>
-<p>这里的$D_1f(g_1(\alpha),g_2(\alpha))$就是 $f(g_1(\alpha),g_2(\alpha))$对 $g_1(\alpha)$求导，这里的 $w’$就表示的 $w- \xi\nabla_{\alpha}\mathcal L_{train}(w,\alpha)$这个整体，$D_2f(g_1(\alpha),g_2(\alpha))$同理</p>
-<p>将上面的四项带入到 $\nabla_{\alpha} \mathcal L_{val}(w- \xi\nabla_{\alpha}\mathcal L_{train}(w,\alpha),\alpha)$当中就可以得到上式的后面部分了</p>
+<p>这里的$D_1f(g_1(\alpha),g_2(\alpha))$就是 $f(g_1(\alpha),g_2(\alpha))$对 $g_1(\alpha)$求导，这里的 $w’$就表示的 $w- \xi\nabla_{w}\mathcal L_{train}(w,\alpha)$这个整体，$D_2f(g_1(\alpha),g_2(\alpha))$同理</p>
+<p>将上面的四项带入到 $\nabla_{\alpha} \mathcal L_{val}(w- \xi\nabla_{w}\mathcal L_{train}(w,\alpha),\alpha)$当中就可以得到上式的后面部分了</p>
 <p>当然还要计算最后两项的乘积即 $\xi\nabla_{\alpha,w}^2\mathcal L_{train}(w,\alpha) \cdot \nabla_{w’}\mathcal L_{val}(w’,\alpha)$，该如何计算呢？要用到一阶的泰勒公式展开</p>
 <p><br></p>
 <p><img src="/2022/05/26/DARTS/image-20220526231345786.png" alt="image-20220526231345786"></p>
 <p><br></p>
-<p>当 $\xi=0$时，$\xi\nabla_{\alpha}\mathcal L_{train}(w,\alpha)$将消失。在这种情况下，架构梯度由以下公式给出$\nabla_{\alpha} \mathcal L_{val}(w,\alpha)$，对应于通过假设当前$w$与$w^*(\alpha)$相同来优化验证损失的简单方式，这样虽然可以加速，但是性能会差。</p>
+<p>当 $\xi=0$时，$\xi\nabla_{w}\mathcal L_{train}(w,\alpha)$将消失。在这种情况下，架构梯度由以下公式给出$\nabla_{\alpha} \mathcal L_{val}(w,\alpha)$，对应于通过假设当前$w$与$w^*(\alpha)$相同来优化验证损失的简单方式，这样虽然可以加速，但是性能会差。</p>
 <p>我们引用$\xi=0$的情况作为一阶近似，引用$\xi &gt;0$的梯度公式作为二阶近似。</p>
 <hr>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
