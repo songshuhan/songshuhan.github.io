@@ -6,15 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta property="og:type" content="article">
-<meta property="og:title" content="muti-device-hexo">
+    <meta name="description" content="这篇博客记录一下$hexo$博客的同步管理及迁移过程中所踩的坑，其实说白了就是我要写博客总不能只在一个设备上写吧，这样我走到哪里都要背着个电脑，那岂不是要累死，当然$hexo$的本意也是让我们可以把环境文件放在$github$上托管的，但是$hexo$在搭建好之后只存放了静态文件，关于环境的配置并没有保存，所以，想要在另一台电脑上重新部署就需要使用$github$进行同步管理了。 $github$">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Muti-Device-hexo">
 <meta property="og:url" content="http://example.com/2022/06/07/muti-device-hexo/index.html">
 <meta property="og:site_name" content="SHUHAN&#39;S NOTE">
+<meta property="og:description" content="这篇博客记录一下$hexo$博客的同步管理及迁移过程中所踩的坑，其实说白了就是我要写博客总不能只在一个设备上写吧，这样我走到哪里都要背着个电脑，那岂不是要累死，当然$hexo$的本意也是让我们可以把环境文件放在$github$上托管的，但是$hexo$在搭建好之后只存放了静态文件，关于环境的配置并没有保存，所以，想要在另一台电脑上重新部署就需要使用$github$进行同步管理了。 $github$">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-06-07T08:41:09.000Z">
-<meta property="article:modified_time" content="2022-06-07T08:52:14.117Z">
+<meta property="article:modified_time" content="2022-06-07T10:29:22.430Z">
 <meta property="article:author" content="Shuhan Song">
-<meta property="article:tag" content="Passion, Graph Neural Network">
+<meta property="article:tag" content="tools">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
     
     
@@ -35,7 +39,7 @@
       
     
     <!-- title -->
-    <title>muti-device-hexo</title>
+    <title>Muti-Device-hexo</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -97,21 +101,21 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/06/07/muti-device-hexo/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/07/muti-device-hexo/&text=muti-device-hexo"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/07/muti-device-hexo/&is_video=false&description=muti-device-hexo"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=muti-device-hexo&body=Check out this article: http://example.com/2022/06/07/muti-device-hexo/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/07/muti-device-hexo/&name=muti-device-hexo&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/07/muti-device-hexo/&t=muti-device-hexo"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/07/muti-device-hexo/&text=Muti-Device-hexo"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/07/muti-device-hexo/&is_video=false&description=Muti-Device-hexo"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Muti-Device-hexo&body=Check out this article: http://example.com/2022/06/07/muti-device-hexo/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/07/muti-device-hexo/&name=Muti-Device-hexo&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/07/muti-device-hexo/&t=Muti-Device-hexo"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     <div id="toc">
-      
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%97%A7%E7%8E%AF%E5%A2%83%E4%B8%8B"><span class="toc-number">1.</span> <span class="toc-text">在旧环境下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%96%B0%E7%8E%AF%E5%A2%83%E4%B8%8B%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">在新环境下：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E5%8F%B0%E7%94%B5%E8%84%91%E4%B8%8A%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">两台电脑上的操作</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -123,7 +127,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        muti-device-hexo
+        Muti-Device-hexo
     </h1>
 
 
@@ -142,16 +146,71 @@
 
 
       
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Tools/">Tools</a>
+    </div>
+
 
       
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/git/" rel="tag">git</a>, <a class="tag-link-link" href="/tags/github/" rel="tag">github</a>, <a class="tag-link-link" href="/tags/tools/" rel="tag">tools</a>
+    </div>
+
 
     </div>
   </header>
   
 
   <div class="content" itemprop="articleBody">
-    <script type="math/tex; mode=display">
-</script>
+    <p>这篇博客记录一下$hexo$博客的同步管理及迁移过程中所踩的坑，其实说白了就是我要写博客总不能只在一个设备上写吧，这样我走到哪里都要背着个电脑，那岂不是要累死，当然$hexo$的本意也是让我们可以把环境文件放在$github$上托管的，但是$hexo$在搭建好之后只存放了静态文件，关于环境的配置并没有保存，所以，想要在另一台电脑上重新部署就需要使用$github$进行同步管理了。</p>
+<p>$github$上的$repo$创建了两个分支，$master$保存静态页面，$hexo$用于保存环境的全部文件。</p>
+<p>其实有很多博客已经说了过程，可以参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://xuexuan.site/2021/02/04/hexo%E5%8D%9A%E5%AE%A2%E5%A4%9A%E8%AE%BE%E5%A4%87%E5%90%8C%E6%AD%A5/">http://xuexuan.site/2021/02/04/hexo%E5%8D%9A%E5%AE%A2%E5%A4%9A%E8%AE%BE%E5%A4%87%E5%90%8C%E6%AD%A5/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/fceaf373d797">https://www.jianshu.com/p/fceaf373d797</a></li>
+</ul>
+<p>这里稍做总结</p>
+<h2 id="在旧环境下"><a href="#在旧环境下" class="headerlink" title="在旧环境下"></a>在旧环境下</h2><ul>
+<li>首先在$github$上新建一个分支，取名为$hexo$，注意新建完的分支是$master$分支的复制，我们希望清空然后只存放$hexo$所有的环境配置文件</li>
+<li>$github$上切换到$hexo$分支，<code>git clone</code>仓库到本地。</li>
+<li>此时本地会多出一个<code>username.github.io</code>文件夹，命令行<code>cd</code>进去，把<code>.git</code>文件夹之外的所有文件都删除（如果你看不到这个文件夹，说明是隐藏了。$windows$下需要右击文件夹内空白处，点选’显示/隐藏 异常文件’，$Mac$下我就不知道了）外的其他文件夹。</li>
+<li>命令行<code>git add -A</code>把工作区的变化（包括已删除的文件）提交到暂存区（$ps$:<code>git add .</code>提交的变化不包括已删除的文件）。</li>
+<li>命令行<code>git commint -m &quot;some description&quot;</code>提交。</li>
+<li>命令行<code>git push origin hexo</code>推送到远程$hexo$分支。此时刷下$github$，如果正常操作，$hexo$分支应该已经被清空了。</li>
+<li>复制本地<code>username.github.io</code>文件夹中的<code>.git</code>文件夹到$hexo$项目根目录下。此时，$hexo$项目已经变成了和远程$hexo$分支关联的本地仓库了。而<code>username.github.io</code>文件夹的使命到此为止，你可以把它删掉，因为我们只是把它作为一个“中转站”的角色。以后每次发布新文章或修改网站样式文件时，<code>git add . &amp; git commit -m &quot;some description&quot; &amp; git push origin hexo</code>即可把环境文件推送到$hexo$分支。然后再<code>hexo g -d</code>发布网站并推送静态文件到$master$分支。</li>
+</ul>
+<hr>
+<h2 id="在新环境下："><a href="#在新环境下：" class="headerlink" title="在新环境下："></a>在新环境下：</h2><p>​    这部分应该要简单一点，如果你已经搭建过一个$hexo$博客的话。</p>
+<ul>
+<li>新电脑上安装$node.js$和$git$。</li>
+<li>安装$hexo$：<code>npm install -g hexo-cli</code>。</li>
+<li>$clone$远程仓库到本地 <code>git clone git@github.com:username/username.github.io.git</code>。</li>
+<li>使用<code>npm install</code>安装依赖。<strong><font color="DarkViolet">（这里要注意，看下面的踩坑问题分析）</font></strong></li>
+<li>本地生成网站并开启博客服务器：<code>hexo g &amp; hexo s</code>。如果一切正常，此时打开浏览器输入<code>http://localhost:4000/</code>已经可以看到博客正常运行了。</li>
+</ul>
+<hr>
+<h2 id="两台电脑上的操作"><a href="#两台电脑上的操作" class="headerlink" title="两台电脑上的操作"></a>两台电脑上的操作</h2><p>至此，迁移工作已完成，在两台电脑之间的同步操作如下：</p>
+<ul>
+<li><code>git pull</code>从远程$hexo$分支拉取最新的环境文件到本地，可以理解为$svn$的更新操作。比如在公司写了博客，回家在电脑上也要写需要先执行这一步操作。</li>
+<li>文章写完，要发布时，需要先提交环境文件，再发布文章。按以下顺序执行命令：<code>git add .</code>、<code>git commit -m &quot;some descrption&quot;</code>、<code>git push origin hexo</code>、<code>hexo g -d</code>。</li>
+</ul>
+<hr>
+<p>其实上面的过程千篇一律，下面要记录一下有价值的关键问题</p>
+<p>我们发现在把本地的环境上传到$github$上的时候并没有$theme$文件夹和$node \underline{} modules$文件夹，这就导致了我们在新环境<code>git pull</code>的时候其实并不能使用我们的主题，会报错<code>warn no layout ...</code>，而且我们在旧环境下辛辛苦苦安装的一些支持$latex$的包，好不容易解决的$hexo$中不能显示图片的问题，这些统统都在文件夹里，$node \underline{} modules$有很多的调整。我们其实玩$hexo$无非就是主题和各种格式的配置费心费力，那这最需要的两个文件夹都拿不到还玩啥，所以我们就要考虑为什么没有把这两个文件夹的内容push上去?</p>
+<ul>
+<li>远程$hexo$分支中的主题文件夹也为空。原来是在搭建博客开始使用主题时，文件夹是从远程<code>clone</code>过来的。所以$theme$文件夹中的<code>.git</code>文件夹会导致$theme$文件夹无法被跟踪。这个<code>.git</code>文件夹删除之后重新提交。但是，这样解决貌似依然不行，<strong><font color="DarkViolet">其实根本原因是因为之前主题是设置成被$ignore$,解决方法是<code>git rm -r --cached cactus</code>，取消对$cactus$之前的追踪记录。</font></strong></li>
+<li>关于$node \underline{} modules$文件夹，在<code>git pull</code>后的新环境下使用<code>npm install</code>安装依赖，就会自动生成一个，$node \underline{} modules$但是这个文件夹和我们老环境中的天差地别，之前我们可是好好的进行过调整和修改，所以其实不需要执行这个命令，没有意义，我们只想要老的文件夹，这里主要是因为在$.gitignore$文件中规定了其中的一些文件夹都是被忽略的，是不会被提交的，在<code>hexo g -d</code>时部署到$github$上的只有静态文件，而提交环境文件时则不会提交，节省了空间，所以为了能让文件夹能$node \underline{} modules$够成功上传到$github$上，我们需要把$.gitignore$文件中的删除就可以了$node \underline{} modules$</li>
+</ul>
+<hr>
+<p>最后总结一下在hexo中对数学公式和图片无法显示问题和对标签引入的处理，可以参考下面几个比较直击痛点的博文，现在的垃圾信息，垃圾文章太多了，很浪费时间，要学会甄别</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://slime0.github.io/2020/07/11/%E8%A7%A3%E5%86%B3%E4%BD%BF%E7%94%A8Typora%EF%BC%8CHexo%E5%8D%9A%E5%AE%A2%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E7%9A%84%E5%9D%91/">https://slime0.github.io/2020/07/11/%E8%A7%A3%E5%86%B3%E4%BD%BF%E7%94%A8Typora%EF%BC%8CHexo%E5%8D%9A%E5%AE%A2%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E7%9A%84%E5%9D%91/</a></li>
+<li><a target="_blank" rel="noopener" href="http://computetechnologydaily.com:5000/2021/02/12/08055639c3a24350a200247af3d9d524/">http://computetechnologydaily.com:5000/2021/02/12/08055639c3a24350a200247af3d9d524/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7ab21c7f0674">https://www.jianshu.com/p/7ab21c7f0674</a></li>
+</ul>
+
   </div>
 </article>
 
@@ -176,22 +235,22 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%97%A7%E7%8E%AF%E5%A2%83%E4%B8%8B"><span class="toc-number">1.</span> <span class="toc-text">在旧环境下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%96%B0%E7%8E%AF%E5%A2%83%E4%B8%8B%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">在新环境下：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E5%8F%B0%E7%94%B5%E8%84%91%E4%B8%8A%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">两台电脑上的操作</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/06/07/muti-device-hexo/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/07/muti-device-hexo/&text=muti-device-hexo"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/07/muti-device-hexo/&is_video=false&description=muti-device-hexo"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=muti-device-hexo&body=Check out this article: http://example.com/2022/06/07/muti-device-hexo/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=muti-device-hexo"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/07/muti-device-hexo/&name=muti-device-hexo&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/07/muti-device-hexo/&t=muti-device-hexo"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/07/muti-device-hexo/&text=Muti-Device-hexo"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/07/muti-device-hexo/&is_video=false&description=Muti-Device-hexo"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Muti-Device-hexo&body=Check out this article: http://example.com/2022/06/07/muti-device-hexo/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/07/muti-device-hexo/&title=Muti-Device-hexo"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/07/muti-device-hexo/&name=Muti-Device-hexo&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/07/muti-device-hexo/&t=Muti-Device-hexo"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
