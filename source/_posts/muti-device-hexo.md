@@ -1,5 +1,5 @@
 ---
-title: Muti-Device-hexo
+title: Muti-Device-Hexo
 date: 2022-06-07 16:41:09
 mathjax: true
 tags:
