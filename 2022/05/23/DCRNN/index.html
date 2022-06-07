@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="paper:https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01926 code:https:&#x2F;&#x2F;github.com&#x2F;liyaguang&#x2F;DCRNN&#x2F; 所解决的问题 复杂的路网空间依赖性 随着路况变化非线性变化的动态时间依赖性 长期预测本身就存在的内在的困难。  这项工作使用一个有向图来表示交通传感器之间的成对空间相关性，该图的节点是传感器，边权重表示通过道路网络距离测量的传感器对之间的接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DCRNN(ICLR 2018)">
+<meta property="og:url" content="http://example.com/2022/05/23/DCRNN/index.html">
+<meta property="og:site_name" content="SHUHAN&#39;S NOTE">
+<meta property="og:description" content="paper:https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01926 code:https:&#x2F;&#x2F;github.com&#x2F;liyaguang&#x2F;DCRNN&#x2F; 所解决的问题 复杂的路网空间依赖性 随着路况变化非线性变化的动态时间依赖性 长期预测本身就存在的内在的困难。  这项工作使用一个有向图来表示交通传感器之间的成对空间相关性，该图的节点是传感器，边权重表示通过道路网络距离测量的传感器对之间的接">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/.com//GRU%20ALL.png">
+<meta property="article:published_time" content="2022-05-23T15:36:35.000Z">
+<meta property="article:modified_time" content="2022-06-07T07:29:07.087Z">
+<meta property="article:author" content="Shuhan Song">
+<meta property="article:tag" content="GNNs">
+<meta property="article:tag" content="spatiotemporal sequences">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//GRU%20ALL.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>DCRNN(ICLR 2018)</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/songshuhan">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/05/24/word2vec/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/05/21/Pro-GNN/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/05/23/DCRNN/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/05/23/DCRNN/&text=DCRNN(ICLR 2018)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/05/23/DCRNN/&is_video=false&description=DCRNN(ICLR 2018)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DCRNN(ICLR 2018)&body=Check out this article: http://example.com/2022/05/23/DCRNN/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/05/23/DCRNN/&name=DCRNN(ICLR 2018)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/05/23/DCRNN/&t=DCRNN(ICLR 2018)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%80%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">所解决的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">2.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E4%BE%9D%E8%B5%96%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">空间依赖性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E5%8D%B7%E7%A7%AF"><span class="toc-number">4.</span> <span class="toc-text">扩散卷积</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E5%8D%B7%E7%A7%AF%E5%B1%82"><span class="toc-number">5.</span> <span class="toc-text">扩散卷积层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E4%BE%9D%E8%B5%96%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text">时间依赖性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GRU%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">GRU补充知识：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E9%97%A8"><span class="toc-number">6.1.1.</span> <span class="toc-text">更新门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E7%BD%AE%E9%97%A8"><span class="toc-number">6.1.2.</span> <span class="toc-text">重置门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E8%AE%B0%E5%BF%86%E5%86%85%E5%AE%B9"><span class="toc-number">6.1.3.</span> <span class="toc-text">当前记忆内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E6%AD%A5%E7%9A%84%E6%9C%80%E7%BB%88%E8%AE%B0%E5%BF%86"><span class="toc-number">6.1.4.</span> <span class="toc-text">当前时间步的最终记忆</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number"></span> <span class="toc-text">总结</span></a>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        DCRNN(ICLR 2018)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Shuhan Song</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-05-23T15:36:35.000Z" itemprop="datePublished">2022-05-23</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Paper-Reading/">Paper Reading</a> › <a class="category-link" href="/categories/Paper-Reading/Graph-Neural-Networks/">Graph Neural Networks</a> › <a class="category-link" href="/categories/Paper-Reading/Graph-Neural-Networks/spatiotemporal-sequences/">spatiotemporal sequences</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/GNNs/" rel="tag">GNNs</a>, <a class="tag-link-link" href="/tags/spatiotemporal-sequences/" rel="tag">spatiotemporal sequences</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><font color="VioletRed">paper</font>:<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.01926">https://arxiv.org/abs/1707.01926</a></p>
+<p><font color="VioletRed">code</font>:<a target="_blank" rel="noopener" href="https://github.com/liyaguang/DCRNN/">https://github.com/liyaguang/DCRNN/</a></p>
+<h2 id="所解决的问题"><a href="#所解决的问题" class="headerlink" title="所解决的问题"></a>所解决的问题</h2><ol>
+<li>复杂的路网空间依赖性</li>
+<li>随着路况变化非线性变化的动态时间依赖性</li>
+<li>长期预测本身就存在的内在的困难。</li>
+</ol>
+<p>这项工作使用一个<strong><font color="DarkViolet">有向图来表示交通传感器之间的成对空间相关性，该图的节点是传感器，边权重表示通过道路网络距离测量的传感器对之间的接近度。</font></strong>我们将交通流动力学建模为一个扩散过程，并提出了扩散卷积运算来捕获空间依赖性。我们进一步提出了扩散卷积递归神经网络（DCRNN），它集成了扩散卷积、序列到序列结构和定时采样技术。</p>
+<h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><p>交通预测的目标是根据之前从道路网络上的N个相关传感器观测到的交通流量，预测未来的交通速度。我们可以将传感器网络表示为加权有向图$\mathcal G=(\mathcal V,\mathcal E,W )$，其中$\mathcal V$是一组节点$\left|\mathcal V \right|=N$，$\mathcal E$是一组边，$W \in \mathbb R^{N \times N}$是表示节点接近度的加权邻接矩阵（例如，其道路网络距离的函数）,将$\mathcal G$上观察到的交通流表示为图形信号$X \in \mathbb R^{N \times P}$，其中P是每个节点的特征数（例如速度、体积）。假设$X^{(t)}$表示在时间t观察到的图形信号，交通预测问题旨在学习一个函数$h(\cdot)$，该函数将之前的$T^{‘}$个历史图形信号映射到未来的$T$个图形信号，给定一个图G：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+[X^{(t-T'+1)},\cdots, X^{(t)};\mathcal G] \stackrel{h(\cdot)}{\longrightarrow}[X^{(t+1)},\cdots, X^{(T)}]
+\end{equation}</script><h2 id="空间依赖性"><a href="#空间依赖性" class="headerlink" title="空间依赖性"></a>空间依赖性</h2><p>通过将交通流关联到扩散过程来建模空间依赖性，该过程明确捕获了交通动力学的随机性质。该扩散过程的特征是$\mathcal G$上的随机游动，restart概率为$\alpha \in [0,1]$和状态转移矩阵$D<em>0^{-1}W$。这里$D_0=diag(W1)$是出度对角矩阵，其中$1\in \mathbb R^{N}$是全为1的向量，**<font color="DarkViolet">如同马尔可夫过程一样，这个随机游走在游走了足够长的步数后能得到一个稳定的分布$\mathcal{P}\in\mathbb{R}^{N\times N}$，在这个分布中的每一行$\mathcal{P}</font></em>{i,:}\in\mathbb{R}^{N}$,表示节点$i$与其余节点的相似性。&lt;/font&gt;**</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">补充：这块内容其实在PPNP&amp;APPNP那篇里介绍过，在jk-net那篇论文里有证明说GCN获得的表征最终会与随机游走获得的稳定分布一致，但传统随机游走由于没考虑restart，使得其在表征起始节点上并不好，所以该模型加入了一个restart的概率来改进。</span><br></pre></td></tr></table></figure>
+<p>这个稳定分布用数学公式表示为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\mathcal P = \sum_{\mathcal k=0}^{\infty}\alpha(1-\alpha)^k(D_O^{-1}W)^k
+\end{equation}</script><p>其中$k$是扩散步数。在实践中，我们使用扩散过程的有限$k$步截断，并为每个步骤指定一个可训练的权重。<strong><font color="DarkViolet">在实际模型中，还会利用入度矩阵再求一次，以更充分地捕获双向（upstream和downstream）的信息。（注意，是有向图，所以按入度和出度划分）</font></strong></p>
+<h2 id="扩散卷积"><a href="#扩散卷积" class="headerlink" title="扩散卷积"></a><strong>扩散卷积</strong></h2><p>$X \in \mathbb R^{N \times P}$ 和过滤器 $f_{\theta}$ 被定义为:</p>
+<script type="math/tex; mode=display">
+X_{:,p\,\star \mathcal G} \,f_{\theta}=\sum_{k=0}^{K-1}(\theta_{k,1}(D_O^{-1}W)^k+ \theta_{k,2}(D_I^{-1}W^T)^k)X_{:,p} \quad for \ \mathcal p\in \left\{ 1,\cdots,P \right\}</script><p>这里的$D_O^{-1}W$和$D_I^{-1}W^T$分别是由上面的出度、入度扩散操作所得的稳定分布，式中$\theta \in \mathbb R^{K \times 2}$是滤波器的参数,上式的计算如果$\mathcal G$是稀疏矩阵，可以使用递归稀疏稠密矩阵的计算方式大大减低计算复杂度。证明可以看论文详细介绍。</p>
+<h2 id="扩散卷积层"><a href="#扩散卷积层" class="headerlink" title="扩散卷积层"></a><strong>扩散卷积层</strong></h2><p>利用上式中定义的卷积运算，我们可以建立一个扩散卷积层，将$P$维特征映射到$Q$维输出。其中定义参数张量为$\Theta \in \mathbb R^{Q \times P \times K \times 2} = [\theta]<em>{q,p}$是用来进行维度转化的参数， $\Theta</em>{q,p,:,:} \in \mathbb R^{K \times 2}$是参数化第$p$维输入和第$q$维输出的卷积滤波器。因此，扩散卷积层为：</p>
+<script type="math/tex; mode=display">
+H_{:,q}=a(\sum_{p=1}^P X_{;,q \ \star \mathcal G}\ f_{\theta_{q,p,:,:}}) \quad for \ q\in \left\{ 1, \cdots,Q \right\}</script><p>值得一提的是，文章里提到了扩散卷积层与频域GCN的关系。文中指出，ChebNet实际上是扩散卷积的一种特例。$X \in \mathbb R^{N \times P}$是输入，$H \in \mathbb R^{N \times Q}$是输出，扩散卷积层学习图结构数据的表示，我们可以使用基于随机梯度的方法对其进行训练。</p>
+<h2 id="时间依赖性"><a href="#时间依赖性" class="headerlink" title="时间依赖性"></a><strong>时间依赖性</strong></h2><p>利用递归神经网络（RNN）来建模时间依赖性。特别是，我们使用门控循环单元（GRU），这是RNN的一种简单而强大的变体。我们将GRU中的矩阵乘法替换为扩散卷积，从而提出了扩散卷积门控循环单元（DCGRU）。</p>
+<hr>
+<h3 id="GRU补充知识："><a href="#GRU补充知识：" class="headerlink" title="GRU补充知识："></a>GRU补充知识：</h3><p>GRU 原论文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1406.1078v3.pdf">https://arxiv.org/pdf/1406.1078v3.pdf</a><br>GRU不错的理解：<a target="_blank" rel="noopener" href="https://towardsdatascience.com/understanding-gru-networks-2ef37df6c9be">https://towardsdatascience.com/understanding-gru-networks-2ef37df6c9be</a></p>
+<p>GRU 背后的原理与 LSTM 非常相似，即用门控机制控制输入、记忆等信息而在当前时间步做出预测，表达式由以下给出：</p>
+<script type="math/tex; mode=display">
+z=\sigma(x_tU^z + s_{t-1}W^z) \\
+r=\sigma(x_tU^T + S_{t-1}W^r) \\
+h=tanh(x_tU^T + S_{t-1}\circ W^h) \\
+s_t=(1-z)\circ h+ z \circ_{t-1}</script><p>GRU 有两个有两个门，即一个重置门（reset gate）和一个更新门（update gate）。从直观上来说，重置门决定了如何将新的输入信息与前面的记忆相结合，更新门定义了前面记忆保存到当前时间步的量。如果我们将重置门设置为 1，更新门设置为 0，那么我们将再次获得标准 RNN 模型。</p>
+<h4 id="更新门"><a href="#更新门" class="headerlink" title="更新门"></a>更新门</h4><p>在时间步 t，我们首先需要使用以下公式计算更新门 $z_t$：</p>
+<script type="math/tex; mode=display">
+z_t=\sigma(W^{(z)}x_t + U^{(z)}h_{t-1})</script><p>其中 $x<em>t$为第 $t$ 个时间步的输入向量，即输入序列 $X$的第 $t$个分量，它会经过一个线性变换（与权重矩阵 $W^{(z)}$相乘）。$h</em>{t-1} $保存的是前一个时间步 $t-1 $的信息，它同样也会经过一个线性变换。更新门将这两部分信息相加并投入到 $\sigma$ 激活函数中，因此将激活结果压缩到 0 到 1 之间。</p>
+<p><strong><font color="Salmon">更新门帮助模型决定到底要将多少过去的信息传递到未来，或到底前一时间步和当前时间步的信息有多少是需要继续传递的。这一点非常强大，因为模型能决定从过去复制所有的信息以减少梯度消失的风险。</font></strong></p>
+<h4 id="重置门"><a href="#重置门" class="headerlink" title="重置门"></a>重置门</h4><p>重置门主要决定了到底有多少过去的信息需要遗忘，我们可以使用以下表达式计算：</p>
+<script type="math/tex; mode=display">
+r_t=\sigma(W^{(r)}x_t + U^{(r)}h_{t-1})</script><p><strong><font color="DarkViolet">该表达式与更新门的表达式是一样的，只不过线性变换的参数和用处不一样而已。</font></strong></p>
+<h4 id="当前记忆内容"><a href="#当前记忆内容" class="headerlink" title="当前记忆内容"></a>当前记忆内容</h4><p>在重置门的使用中，新的记忆内容将使用重置门储存过去相关的信息，它的计算表达式为：</p>
+<script type="math/tex; mode=display">
+h_t^{'}=tanh(Wx_t + r_t\circ Uh_{t-1})</script><p>输入$x<em>t$与上一时间步信息 $h</em>{t-1} $先经过一个线性变换，即分别右乘矩阵 W 和 U。计算重置门 $r<em>t$ 与 $Uh</em>{t-1}$ 的 Hadamard 乘积，即$r<em>t$ 与 $Uh</em>{t-1}$ 的对应元素乘积。<strong><font color="DarkViolet">因为前面计算的重置门是一个由 0 到 1 组成的向量，它会衡量门控开启的大小。例如某个元素对应的门控值为 0，那么它就代表这个元素的信息完全被遗忘掉。该 Hadamard 乘积将确定所要保留与遗忘的以前信息。</font></strong></p>
+<h4 id="当前时间步的最终记忆"><a href="#当前时间步的最终记忆" class="headerlink" title="当前时间步的最终记忆"></a>当前时间步的最终记忆</h4><p>在最后一步，网络需要计算$ h<em>t$，该向量将保留当前单元的信息并传递到下一个单元中。在这个过程中，我们需要使用更新门，它决定了当前记忆内容和$h</em>{t}^{‘}$前一时间步 $h_{t-1}$ 中需要收集的信息是什么。</p>
+<script type="math/tex; mode=display">
+h_t= z_t \odot h_{t-1} + (1-z_t) \odot h_t^{'}</script><p>现在我们有了<strong><font color="Salmon">当前记忆</font></strong>保留至最终记忆的信息$h<em>{t}^{‘}$，$z_t $与 $h</em>{t-1}$ 的 Hadamard 乘积表示<strong><font color="Salmon">前一时间步</font></strong>保留到最终记忆的信息</p>
+<p><img src="/.com//GRU%20ALL.png" alt="GRU ALL"></p>
+<p>门控循环单元不会随时间而清除以前的信息，它会保留相关的信息并传递到下一个单元，因此它利用全部信息而避免了梯度消失问题。</p>
+<hr>
+<p>回到DCRNN当中，我们将GRU中的矩阵乘法替换为扩散卷积，从而提出了扩散卷积选通递归单元（DCGRU）。公式如下：</p>
+<script type="math/tex; mode=display">
+r^{(t)}=\sigma(\Theta_{r\ \star \mathcal G}[X^{(t)},H^{(t-1)}]+ b_r) \\
+u^{(t)}=\sigma(\Theta_{r\ \star \mathcal G}[X^{(t)},H^{(t-1)}]+ b_u) \\
+C^{(t)}=\tanh(\Theta_{C\ \star \mathcal G}[X^{(t)},(r^{(t)} \odot H^{(t-1)})]+ b_c) \\
+H^{(t)}= u^{(t)} \odot H^{(t-1)} + (1-u^{(t)}) \odot C^{(t)}</script><p>之后为了进行预测，模型在这一块设计成了$Seq2Seq$的形式。同时，为了提升$Seq2Seq$的效果，模型引入了$schedule sample$，为什么$schedule sample$能提升效果呢？原因如下：</p>
+<p>$seq2seq$模型在训练和预测的时候实际上存在着差异，在训练过程中，是将已有的正确的序列输入进行预测，而在预测层中，则是根据上一轮生成的结果进行预测，如果上一轮结果错误，那么后续接连错误的概率就会很大。为了解决这个问题，$schedule sample$设定了一个概率$p$，使得在训练的过程中，有$p$的概率使用训练样本，有$1-p$的概率使用上一轮生成的结果进行预测。在DCRNN的训练策略中，还会随着训练的次数加深不断降低$p$，直到$p$为0，这样就使得模型能很好地适应预测阶段的模式。</p>
+<p><strong><font color="SandyBrown">参考</font></strong>：这个作者的理解，挺不错的 <a target="_blank" rel="noopener" href="https://www.ooordinary.com/post/dcrnn">https://www.ooordinary.com/post/dcrnn</a></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>第一篇时空图神经网络的文章，其实在序列这里一直是短板，没能理解是怎么序列实现的，自己又懒，一定要看一下RNN和$seq2seq$的代码实现</p>
+<p>本篇文章主要理解的就是两个点：</p>
+<ol>
+<li><strong><font color="Salmon">随机游走得到稳定分布并利用扩散卷积</font></strong></li>
+<li><strong><font color="Salmon">对时间依赖性GRU单元的理解和DCGRU的理解</font></strong></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/songshuhan">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%80%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">所解决的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">2.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E4%BE%9D%E8%B5%96%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">空间依赖性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E5%8D%B7%E7%A7%AF"><span class="toc-number">4.</span> <span class="toc-text">扩散卷积</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E6%95%A3%E5%8D%B7%E7%A7%AF%E5%B1%82"><span class="toc-number">5.</span> <span class="toc-text">扩散卷积层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E4%BE%9D%E8%B5%96%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text">时间依赖性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GRU%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">GRU补充知识：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E9%97%A8"><span class="toc-number">6.1.1.</span> <span class="toc-text">更新门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E7%BD%AE%E9%97%A8"><span class="toc-number">6.1.2.</span> <span class="toc-text">重置门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E8%AE%B0%E5%BF%86%E5%86%85%E5%AE%B9"><span class="toc-number">6.1.3.</span> <span class="toc-text">当前记忆内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%E6%AD%A5%E7%9A%84%E6%9C%80%E7%BB%88%E8%AE%B0%E5%BF%86"><span class="toc-number">6.1.4.</span> <span class="toc-text">当前时间步的最终记忆</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number"></span> <span class="toc-text">总结</span></a>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/05/23/DCRNN/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/05/23/DCRNN/&text=DCRNN(ICLR 2018)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/05/23/DCRNN/&is_video=false&description=DCRNN(ICLR 2018)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DCRNN(ICLR 2018)&body=Check out this article: http://example.com/2022/05/23/DCRNN/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/05/23/DCRNN/&title=DCRNN(ICLR 2018)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/05/23/DCRNN/&name=DCRNN(ICLR 2018)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/05/23/DCRNN/&t=DCRNN(ICLR 2018)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2022-Forever
+    Shuhan Song
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/songshuhan">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
