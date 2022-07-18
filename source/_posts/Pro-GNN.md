@@ -1,5 +1,5 @@
 ---
-title: Pro-GNN(KDD 2020)
+title: (KDD 2020) Pro-GNN
 date: 2022-05-21 14:56:09
 mathjax: true
 tags:

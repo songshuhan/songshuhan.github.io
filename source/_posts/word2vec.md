@@ -1,5 +1,5 @@
 ---
-title: Word2vec(Google 2013)
+title: (Google 2013) Word2vec
 date: 2022-05-24 18:14:07
 mathjax: true
 tags:

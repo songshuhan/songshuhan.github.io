@@ -1,5 +1,5 @@
 ---
-title: Reliable Deep Graph Learning(中山大学 & 腾讯)
+title: (中山大学 & 腾讯) Reliable Deep Graph Learning
 date: 2022-05-25 18:07:16
 mathjax: true
 tags:

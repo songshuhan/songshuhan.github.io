@@ -1,5 +1,5 @@
 ---
-title: DARTS(ICLR 2019)
+title: (ICLR 2019) DARTS
 date: 2022-05-26 17:55:04
 mathjax: true
 tags:

@@ -1,5 +1,5 @@
 ---
-title: BNM(CVPR 2020)
+title: (CVPR 2020) BNM
 date: 2022-06-06 17:34:18
 mathjax: true
 tags:
@@ -29,7 +29,7 @@ categories:
 
 ### $Measuring \  Discriminability  \ with \  F -norm$
 
-首先从一个$batch$中选择随机选择$B$个未标记样本的数据预测输出，分类的个数位$C$，则$batch$预测输出矩阵$A \in \mathbb R^{B \times C}$为
+首先随机选择$B$个未标记样本的$batch$中的数据预测输出，分类的个数位$C$，则$batch$预测输出矩阵$A \in \mathbb R^{B \times C}$为
 $$
 \sum_{j=1}^{C}A_{i,j}=1 \quad \forall i \in 1 \dots B  \\
 A_{i,j} \ge 0 \quad \forall i \in 1 \dots B,j \in 1 \dots C
