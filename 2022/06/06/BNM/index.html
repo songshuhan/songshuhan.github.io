@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2003.12237 code:  https:&#x2F;&#x2F;github.com&#x2F;cuishuhao&#x2F;BNM 问题：  深度网络的学习在很大程度上依赖于带有人类注释标签的数据。在某些标签不足的情况下，当数据密度较大时，决策边界的性能会下降。一种常见的解决方法是直接最小化香农熵，但熵最小化带来的副作用，即减少预测多样性，大多被忽略。  如何解决：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BNM(CVPR 2020)">
+<meta property="og:title" content="(CVPR 2020) BNM">
 <meta property="og:url" content="http://example.com/2022/06/06/BNM/index.html">
 <meta property="og:site_name" content="SHUHAN&#39;S NOTE">
 <meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2003.12237 code:  https:&#x2F;&#x2F;github.com&#x2F;cuishuhao&#x2F;BNM 问题：  深度网络的学习在很大程度上依赖于带有人类注释标签的数据。在某些标签不足的情况下，当数据密度较大时，决策边界的性能会下降。一种常见的解决方法是直接最小化香农熵，但熵最小化带来的副作用，即减少预测多样性，大多被忽略。  如何解决：">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/06/06/BNM/image-20220606193048170.png">
 <meta property="article:published_time" content="2022-06-06T09:34:18.000Z">
-<meta property="article:modified_time" content="2022-06-07T07:29:07.087Z">
+<meta property="article:modified_time" content="2022-07-18T03:12:00.714Z">
 <meta property="article:author" content="Shuhan Song">
 <meta property="article:tag" content="Transfer Learning">
 <meta name="twitter:card" content="summary">
@@ -39,7 +39,7 @@
       
     
     <!-- title -->
-    <title>BNM(CVPR 2020)</title>
+    <title>(CVPR 2020) BNM</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -89,7 +89,7 @@
         <li><a class="icon" aria-label="Previous post" href="/2022/06/07/muti-device-hexo/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="Next post" href="/2022/06/02/GNAS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Next post" href="/2022/05/26/DARTS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -103,16 +103,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/06/06/BNM/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/06/BNM/&text=BNM(CVPR 2020)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/06/BNM/&is_video=false&description=BNM(CVPR 2020)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=BNM(CVPR 2020)&body=Check out this article: http://example.com/2022/06/06/BNM/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/06/BNM/&name=BNM(CVPR 2020)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/06/BNM/&t=BNM(CVPR 2020)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/06/BNM/&text=(CVPR 2020) BNM"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/06/BNM/&is_video=false&description=(CVPR 2020) BNM"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=(CVPR 2020) BNM&body=Check out this article: http://example.com/2022/06/06/BNM/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/06/BNM/&name=(CVPR 2020) BNM&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/06/BNM/&t=(CVPR 2020) BNM"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -129,7 +129,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        BNM(CVPR 2020)
+        (CVPR 2020) BNM
     </h1>
 
 
@@ -177,7 +177,7 @@
 <li>重新研究了随机选择的数据批的分类输出矩阵的结构。通过理论分析发现，预测的可鉴别性和多样性可以通过$batch$输出矩阵的$Frobenius$范数和秩来分别度量。此外，<strong><font color="DarkViolet">核范数</font></strong>是$Frobenius$范数的上界，是矩阵秩的凸近似。因此，<strong><font color="DarkViolet">为了提高可分辨性和多样性，</font></strong>我们在输出矩阵上提出了$batch$核范数最大化$(BNM)$。</li>
 </ul>
 <hr>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="Measuring-Discriminability-with-F-norm"><a href="#Measuring-Discriminability-with-F-norm" class="headerlink" title="$Measuring \  Discriminability  \ with \  F -norm$"></a>$Measuring \  Discriminability  \ with \  F -norm$</h3><p>首先从一个$batch$中选择随机选择$B$个未标记样本的数据预测输出，分类的个数位$C$，则$batch$预测输出矩阵$A \in \mathbb R^{B \times C}$为</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="Measuring-Discriminability-with-F-norm"><a href="#Measuring-Discriminability-with-F-norm" class="headerlink" title="$Measuring \  Discriminability  \ with \  F -norm$"></a>$Measuring \  Discriminability  \ with \  F -norm$</h3><p>首先随机选择$B$个未标记样本的$batch$中的数据预测输出，分类的个数位$C$，则$batch$预测输出矩阵$A \in \mathbb R^{B \times C}$为</p>
 <script type="math/tex; mode=display">
 \sum_{j=1}^{C}A_{i,j}=1 \quad \forall i \in 1 \dots B  \\
 A_{i,j} \ge 0 \quad \forall i \in 1 \dots B,j \in 1 \dots C</script><p>深度方法可以通过训练足够数量的标记样本来获得性能良好的响应矩阵$A$。然而，在标签不足的情况下，标签数据和未标签数据之间的差异可能导致边缘数据分布在任务特定决策边界附近的高密度区域。由于模糊样本容易被误分类，我们着重于通过增加可分辨性来优化未标记样本的预测结果。</p>
@@ -249,16 +249,16 @@ H(A)=-\frac{1}{B}\sum_{i=1}^{B}\sum_{j=1}^{C}A_{i,j}log(A_{i,j})</script><p>我�
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/06/06/BNM/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/06/BNM/&text=BNM(CVPR 2020)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/06/BNM/&is_video=false&description=BNM(CVPR 2020)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=BNM(CVPR 2020)&body=Check out this article: http://example.com/2022/06/06/BNM/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/06/BNM/&title=BNM(CVPR 2020)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/06/BNM/&name=BNM(CVPR 2020)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/06/BNM/&t=BNM(CVPR 2020)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/06/06/BNM/&text=(CVPR 2020) BNM"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/06/06/BNM/&is_video=false&description=(CVPR 2020) BNM"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=(CVPR 2020) BNM&body=Check out this article: http://example.com/2022/06/06/BNM/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/06/06/BNM/&title=(CVPR 2020) BNM"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/06/06/BNM/&name=(CVPR 2020) BNM&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/06/06/BNM/&t=(CVPR 2020) BNM"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
